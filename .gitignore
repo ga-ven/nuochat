@@ -1,0 +1,16 @@
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+build/
+dist/
+*.spec.bak
+config.json
+.env
+secret.bin
+*.log
+*.nuochat-template.json
+Thumbs.db
+Desktop.ini

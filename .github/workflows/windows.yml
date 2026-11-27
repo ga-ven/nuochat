@@ -1,0 +1,57 @@
+name: Windows build
+
+on:
+  push:
+    branches: ["**"]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  test-and-build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements-dev.txt
+
+      - name: Run tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Build EXE
+        shell: pwsh
+        run: ./build_exe.ps1
+
+      - name: Rename artifact with version
+        shell: pwsh
+        run: |
+          $tag = "${{ github.ref_name }}"
+          if ($tag -like "v*") {
+            Copy-Item dist/NuoChat.exe "dist/NuoChat-$tag-windows-x64.exe"
+          } else {
+            Copy-Item dist/NuoChat.exe "dist/NuoChat-windows-x64.exe"
+          }
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: NuoChat-windows-x64
+          path: dist/NuoChat-*.exe
+          if-no-files-found: error
+
+      - name: Publish release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/NuoChat-${{ github.ref_name }}-windows-x64.exe
+          generate_release_notes: true
+          draft: false

@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nuochat"
+version = "0.2.2"
+description = "Local-first desktop customer-service copilot with OCR and OpenAI-compatible APIs"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "NuoChat contributors" }]
+dependencies = [
+  "numpy>=1.26,<3",
+  "opencv-python>=4.9,<6",
+  "rapidocr_onnxruntime>=1.4,<2",
+  "PySide6>=6.7,<7",
+  "httpx>=0.27,<1"
+]
+
+[project.scripts]
+nuochat = "nuochat.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["nuochat*"]
