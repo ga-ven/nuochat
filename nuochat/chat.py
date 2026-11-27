@@ -61,7 +61,10 @@ def match_unread_rows(badge_rows, ocr_rows, current_title: str, x0: int,
         normalized = normalize_title(title)
         if only_title and normalized != normalize_title(only_title):
             continue
-        if current and (current.startswith(normalized) or normalized.startswith(current)):
+        if only_title:
+            if current == normalized:
+                continue
+        elif current and (current.startswith(normalized) or normalized.startswith(current)):
             continue
         combined = " ".join(text for _, text in nearby)
         if not skip_system or not is_system_chat(combined):

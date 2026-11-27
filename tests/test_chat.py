@@ -28,6 +28,14 @@ class ChatTests(unittest.TestCase):
         )
         self.assertEqual([item.title for item in candidates], [TEST_CHAT_TITLE])
 
+    def test_unread_matching_finds_test_chat_from_similarly_named_current_chat(self):
+        rows = [(100, TEST_CHAT_TITLE), (200, "文件传输助手测试")]
+        candidates = match_unread_rows(
+            [100], rows, "文件传输助手测试", 300,
+            skip_system=False, only_title=TEST_CHAT_TITLE,
+        )
+        self.assertEqual([item.title for item in candidates], [TEST_CHAT_TITLE])
+
     def test_unread_matching_fails_closed(self):
         rows = [(200, "客户甲"), (205, "10:24"), (400, "微信团队"),
                 (500, "项目群（4）"), (600, "在吗")]
